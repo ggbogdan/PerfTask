@@ -1,0 +1,439 @@
+{
+	"info": {
+		"_postman_id": "040c34d8-737f-413b-b70a-7ce213edb2ed",
+		"name": "Task 1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify User Id\", function () {\r",
+							"        var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(pm.collectionVariables.get(\"Id\"));\r",
+							"});\r",
+							"\r",
+							"var body = Object.values(pm.request.body);\r",
+							"pm.collectionVariables.set(\"PostBody\", body);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var small_letters = \"abcdefghijklmnopqrstuvwxyz\";\r",
+							"var shuffled_random_name = small_letters.split('').sort(function(){return 0.5-Math.random()}).join('');\r",
+							"\r",
+							"var numbers = \"123456789\";\r",
+							"var shuffled_random_id = numbers.split('').sort(function(){return 0.5-Math.random()}).join('');\r",
+							"\r",
+							"var random_email = shuffled_random_name.add('@gmail.com');\r",
+							"\r",
+							"pm.collectionVariables.set(\"UserName\", shuffled_random_name);\r",
+							"pm.collectionVariables.set(\"Id\", shuffled_random_id);\r",
+							"pm.collectionVariables.set(\"UserMail\", random_email);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{Id}}\",\n    \"username\": \"{{UserName}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"email\": \"{{UserMail}}\",\n    \"password\": \"12345678\",\n    \"phone\": \"0987654321\",\n    \"userStatus\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user"
+					]
+				},
+				"description": "This can only be done by the logged in user."
+			},
+			"response": [
+				{
+					"name": "successful operation",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": -28761061,\n    \"username\": \"fugiat veniam laborum velit\",\n    \"firstName\": \"incididunt laborum irure t\",\n    \"lastName\": \"dolore cillum\",\n    \"email\": \"anim aute\",\n    \"password\": \"esse\",\n    \"phone\": \"esse culpa\",\n    \"userStatus\": -81398762\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "text/plain"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "Updated user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify User Id\", function () {\r",
+							"        var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(pm.collectionVariables.get(\"Id\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify FirstName\", function () {\r",
+							"        var put_body = Object.values(pm.request.body);\r",
+							"        var put_body_values = JSON.parse(put_body[1]);\r",
+							"        var post_body_values = JSON.parse(pm.collectionVariables.get(\"PostBody\")[1]);\r",
+							"\r",
+							"    pm.expect(put_body_values.firstName).to.not.eql(post_body_values.firstName);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify LastName\", function () {\r",
+							"        var put_body = Object.values(pm.request.body);\r",
+							"        var put_body_values = JSON.parse(put_body[1]);\r",
+							"        var post_body_values = JSON.parse(pm.collectionVariables.get(\"PostBody\")[1]);\r",
+							"\r",
+							"    pm.expect(put_body_values.lastName).to.not.eql(post_body_values.lastName);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{Id}}\",\n    \"username\": \"{{UserName}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"email\": \"{{UserMail}}\",\n    \"password\": \"12345678\",\n    \"phone\": \"0987654321\",\n    \"userStatus\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user/:username",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						":username"
+					],
+					"variable": [
+						{
+							"key": "username",
+							"value": "{{UserName}}",
+							"description": "(Required) name that need to be updated"
+						}
+					]
+				},
+				"description": "This can only be done by the logged in user."
+			},
+			"response": [
+				{
+					"name": "Invalid user supplied",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": -28761061,\n    \"username\": \"fugiat veniam laborum velit\",\n    \"firstName\": \"incididunt laborum irure t\",\n    \"lastName\": \"dolore cillum\",\n    \"email\": \"anim aute\",\n    \"password\": \"esse\",\n    \"phone\": \"esse culpa\",\n    \"userStatus\": -81398762\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/:username",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								":username"
+							],
+							"variable": [
+								{
+									"key": "username",
+									"value": "consequat dolore irure do",
+									"description": "(Required) name that need to be updated"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "text/plain"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				},
+				{
+					"name": "User not found",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": -28761061,\n    \"username\": \"fugiat veniam laborum velit\",\n    \"firstName\": \"incididunt laborum irure t\",\n    \"lastName\": \"dolore cillum\",\n    \"email\": \"anim aute\",\n    \"password\": \"esse\",\n    \"phone\": \"esse culpa\",\n    \"userStatus\": -81398762\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/:username",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								":username"
+							],
+							"variable": [
+								{
+									"key": "username",
+									"value": "consequat dolore irure do",
+									"description": "(Required) name that need to be updated"
+								}
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "text/plain"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "Delete user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify User Id\", function () {\r",
+							"        var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(pm.collectionVariables.get(\"UserName\"));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/user/:username",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						":username"
+					],
+					"variable": [
+						{
+							"key": "username",
+							"value": "{{UserName}}",
+							"description": "(Required) The name that needs to be deleted"
+						}
+					]
+				},
+				"description": "This can only be done by the logged in user."
+			},
+			"response": [
+				{
+					"name": "Invalid username supplied",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/:username",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								":username"
+							],
+							"variable": [
+								{
+									"key": "username",
+									"value": "consequat dolore irure do",
+									"description": "(Required) The name that needs to be deleted"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "text/plain"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				},
+				{
+					"name": "User not found",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/:username",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								":username"
+							],
+							"variable": [
+								{
+									"key": "username",
+									"value": "consequat dolore irure do",
+									"description": "(Required) The name that needs to be deleted"
+								}
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "text/plain"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://petstore.swagger.io/v2",
+			"type": "string"
+		},
+		{
+			"key": "UserName",
+			"value": ""
+		},
+		{
+			"key": "Id",
+			"value": ""
+		},
+		{
+			"key": "UserMail",
+			"value": ""
+		},
+		{
+			"key": "PostBody",
+			"value": ""
+		}
+	]
+}
